@@ -1,0 +1,79 @@
+interface Identifiable {
+  id: number;
+}
+
+interface Describable {
+  describe(): string;
+}
+
+class GenericStorage<T extends Identifiable> {
+
+  constructor(
+    private items: T[] = []
+  ) { }
+
+  public getById(id: number): T | undefined {
+    return this.items.find(item => item.id === id);
+  }
+
+  public add(item: T): void {
+    if (!this.getById(item.id)) {
+      this.items.push(item);
+    }
+  }
+
+  public removeById(id: number): boolean {
+    if (this.getById(id)) {
+      this.items = this.items.filter(item => item.id !== id);
+      return true;
+    }
+    return false;
+  }
+
+  public getAll(): T[] {
+    return [...this.items];
+  }
+
+  public describeAll(): void {
+    this.items.forEach(item => {
+      if (typeof (item as any).describe === 'function') {
+        console.log((item as any as Describable).describe());
+      } else {
+        console.log(
+          `Элемент #${item.id} не содержит описания`
+        );
+      }
+    })
+  }
+
+}
+
+class Product implements Identifiable, Describable {
+  constructor(
+    public id: number,
+    public name: string,
+    public price: number
+  ) { }
+
+  public describe(): string {
+    return `Product: #${this.id}: ${this.name}, price: ${this.price}`;
+  }
+}
+
+
+const storage = new GenericStorage<Product>();
+storage.add(new Product(1, 'Молоко', 80));
+storage.add(new Product(2, 'Сыр', 90));
+storage.add(new Product(3, 'Хлеб', 20));
+storage.add(new Product(4, 'Ягоды', 150));
+
+storage.describeAll();
+console.log('--------------------------------')
+
+storage.add({
+  id: 5,
+  name: 'Продукт',
+  price: 1
+} as Product);
+
+storage.describeAll();
