@@ -1,4 +1,5 @@
-import { Account, AccountManager } from "./classes";
+import { Account } from "./classes/Account";
+import { AccountManager } from "./classes/AccountManager";
 
 const message: string = '🚀 Budget Tracker CLI';
 console.log(message);

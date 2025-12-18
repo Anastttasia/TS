@@ -9,7 +9,9 @@
     "start2": "node dist/calculation-demo.js",
     "start3": "node dist/functions.js",
     "start4": "node dist/index.js",
+    "start5": "node dist/index.js",
     "start6": "node dist/generics.js",
+    "start7": "node dist/index.js",
     "dev": "tsc --watch"
   },
   "author": "Vladykina Anastasia",
