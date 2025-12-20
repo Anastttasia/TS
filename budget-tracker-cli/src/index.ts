@@ -1,53 +1,59 @@
 import { Account } from "./classes/Account";
 import { AccountManager } from "./classes/AccountManager";
+import { Transaction } from "./classes/Transaction";
 
-const message: string = '🚀 Budget Tracker CLI';
-console.log(message);
+
 function main() {
   const accountManager = new AccountManager();
 
   const account1 = new Account("Account 1");
-  account1.addTransaction({
-    id: 1,
-    amount: 10010,
-    type: "income",
-    date: new Date().toISOString(),
-    description: "Зарплата"
-  });
-  account1.addTransaction({
-    id: 2,
-    amount: 2020,
-    type: "expense",
-    date: new Date().toISOString(),
-    description: "Комунальные услуги"
-  });
-  account1.addTransaction({
-    id: 3,
-    amount: 200,
-    type: "expense",
-    date: new Date().toISOString(),
-    description: "Доставка еды"
-  });
-  account1.addTransaction({
-    id: 4,
-    amount: 2000,
-    type: "expense",
-    date: new Date().toISOString(),
-    description: "Ресторан"
-  });
+  account1.addTransaction(new Transaction(
+    100000,
+    "income",
+    new Date().toISOString(),
+    "Зарплата"
+  ));
+  account1.addTransaction(new Transaction(
+    200,
+    "expense",
+    new Date().toISOString(),
+    "Продукты"
+  ));
+  account1.addTransaction(new Transaction(
+    200,
+    "expense",
+    new Date().toISOString(),
+    "Подписка"
+  ));
+  account1.addTransaction(new Transaction(
+    2000,
+    "expense",
+    new Date().toISOString(),
+    "Коммунальные платежи"
+  ));
 
   accountManager.addAccount(account1);
+  const accId = accountManager.getAccounts()[0].id;
+  const acc = accountManager.getAccountById(accId)!;
 
   console.log('Транзакции до удаления:');
-  console.log(accountManager.getAccountById(1)!.getTransactions(), '\n');
+  console.log(accountManager.getAccountById(accId)!.getTransactions(), '\n');
 
-  accountManager.getAccountById(1)!.removeTransactionById(3);
+  const trId = acc.getTransactions()[1].id;
+  acc.removeTransactionById(trId);
 
   console.log('Транзакции после удаления:');
-  console.log(accountManager.getAccountById(1)!.getTransactions(), '\n');
+  console.log(accountManager.getAccountById(accId)!.getTransactions(), '\n');
 
   console.log('Текущее состояние счета:');
   console.log(accountManager.getSummaryString());
+
+
+  console.log('Транзакции:');
+  acc.getTransactions().forEach(tr => {
+    console.log(tr.toString());
+  });
+
 }
 
 main();
