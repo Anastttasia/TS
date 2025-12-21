@@ -1,6 +1,8 @@
+
 import { Account } from "./classes/Account";
 import { AccountManager } from "./classes/AccountManager";
 import { Transaction } from "./classes/Transaction";
+import { readFile } from "fs/promises";
 
 
 function main() {
@@ -67,4 +69,45 @@ function main() {
   });
 }
 
+
+async function testExport() {
+  const account = new Account("Test Account");
+
+  account.addTransaction(new Transaction(
+    1000,
+    "income",
+    new Date().toISOString(),
+    "Депозит"
+  ));
+  account.addTransaction(new Transaction(
+    50,
+    "expense",
+    new Date().toISOString(),
+    "Чай"
+  ));
+  account.addTransaction(new Transaction(
+    120,
+    "expense",
+    new Date().toISOString(),
+    "Сыр"
+  ));
+
+  const filename = 'transactions.csv';
+
+  try {
+    console.log('Экспорт транзакций в CSV');
+    await account.exportTransactionsToCSV(filename);
+    console.log(`Файл ${filename} успешно создан.`);
+
+    console.log('\nСодержимое файла:');
+    const fileContent = await readFile(filename, 'utf-8');
+    console.log(fileContent);
+
+  } catch (error) {
+    console.error('Jшибка:', error);
+  }
+}
+
 main();
+console.log();
+testExport();
